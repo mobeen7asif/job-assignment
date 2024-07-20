@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+
+
+# dotenv environment variables file
+.env
+
+# Build directories
+build/
+dist/
+.cache/
+
+# Backend specific files
+jobs.json
+client.json
+
+# client specific files
+/client/node_modules/
+/client/build/
+/client/.env
+
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Editors and IDEs
+.vscode/
+.idea/
+
