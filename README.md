@@ -13,10 +13,11 @@ This is the client application for managing jobs and clients. It provides a user
 ```
    - cd client
    - npm install
-   - touch .env
+   - touch .env (create .env file)
    - Add thes values in .env file
       - REACT_APP_API_URL=http://localhost:3001
       - REACT_APP_WS_URL=ws://localhost:3001
+   - npm start
 ```
 
 
@@ -32,12 +33,13 @@ This is the client application for managing jobs and clients. It provides a user
    ```
    - git clone <repository-url>
    - npm install
-   - touch .env 
-   - Add thes values in .env file
+   - touch .env (create .env file)
+   - Add then values in .env file
       - PORT=3001
       - CLIENT_URL=http://localhost:3000
       - REDIS_HOST=localhost
       - REDIS_PORT=6379
       - UNSPLASH_URL=https://api.unsplash.com
       - UNSPLASH_CLIENT_ID=7tXD0_YyDEKqptPoGj-o3vHtBlNjPNkmhkUgh4Ayskw
+      - npm start
    ```
