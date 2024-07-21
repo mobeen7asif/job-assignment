@@ -10,7 +10,7 @@ import {
   Link
 } from '@mui/material';
 
-const JobList = ({ jobs }) => {
+const JobList = ({ jobs, client }) => {
   return (
 
     <TableContainer component={Paper}>
@@ -27,7 +27,7 @@ const JobList = ({ jobs }) => {
           {jobs.map((job) => (
             <TableRow key={job.id}>
               <TableCell>{job.id}</TableCell>
-              <TableCell>{job.clientEmail}</TableCell>
+              <TableCell>{client.email}</TableCell>
               <TableCell>{job.status}</TableCell>
               <TableCell>
                 {job.imageUrl ? (

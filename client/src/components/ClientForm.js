@@ -10,7 +10,7 @@ const ClientForm = ({ onClientCreated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post(`/clients`, { name, email });
+      const response = await api.post(`/client`, { name, email });
       onClientCreated(response.data);
     } catch (err) {
       setError('Failed to create client. Please try again.');

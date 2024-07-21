@@ -6,7 +6,7 @@ const path = require('path');
 const Bull = require('bull');
 const { v4: uuidv4 } = require('uuid');
 const { addJobToQueue } = require('./queue'); 
-const { initWebSocket, broadcastJobUpdate } = require('./broadcast');
+const { initWebSocket } = require('./broadcast');
 const http = require('http');
 const Helper = require('./helper');
 
@@ -37,12 +37,6 @@ const ensureFileExists = (filePath, initialContent = '[]') => {
 ensureFileExists(JOBS_FILE, '[]');
 ensureFileExists(CLIENT_FILE, '{}');
 
-const jobQueue = new Bull('jobQueue', {
-  redis: {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-  },
-});
 
 // Read or create client data
 const getClient = () => {
@@ -67,7 +61,7 @@ app.get('/client', (req, res) => {
   }
 });
 
-app.post('/clients', (req, res) => {
+app.post('/client', (req, res) => {
   const { name, email } = req.body;
   if (!name || !email) {
     return res.status(400).json({ message: 'Name and email are required' });
@@ -79,12 +73,12 @@ app.post('/clients', (req, res) => {
 });
 
 // Job endpoints
-app.post('/client/:email/jobs', async (req, res) => {
-  const { email } = req.params;
+app.post('/client/:id/jobs', async (req, res) => {
+  const { id } = req.params;
   const jobId = uuidv4();
   const createdAt = new Date().toISOString().replace('T', ' ').substring(0, 19);
   let newJob = {
-    clientEmail: email,
+    clientId: id,
     id: jobId,
     status: 'pending',
     createdAt
@@ -99,10 +93,8 @@ app.post('/client/:email/jobs', async (req, res) => {
       console.error('Error reading jobs file:', error);
     }
   }
-
   // Add new job to jobs array
   jobs.push(newJob);
-
   // Write updated jobs back to file
   try {
     fs.writeFileSync(JOBS_FILE, JSON.stringify(jobs, null, 2));
@@ -114,13 +106,13 @@ app.post('/client/:email/jobs', async (req, res) => {
   res.json({ id: jobId });
 });
 
-app.get('/client/:email/jobs', (req, res) => {
+app.get('/client/:id/jobs', (req, res) => {
   let jobs = [];
   if (fs.existsSync(JOBS_FILE)) {
     jobs = JSON.parse(fs.readFileSync(JOBS_FILE, 'utf8')) || [];
   }
     // Filter jobs by clientEmail
-    let filteredJobs = jobs.filter(job => job.clientEmail === req.params.email);
+    let filteredJobs = jobs.filter(job => job.clientId === req.params.id);
     // Sort filtered jobs by createdAt field
     filteredJobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   res.json(filteredJobs);

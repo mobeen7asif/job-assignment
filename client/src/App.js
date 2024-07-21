@@ -16,6 +16,7 @@ const App = () => {
 
   // Effect to check if client exists
   useEffect(() => {
+    console.log('here');
     const checkClient = async () => {
       try {
         const response = await api.get(`/client`);
@@ -35,29 +36,12 @@ const App = () => {
   useEffect(() => {
     if (client) {
       const fetchJobs = async () => {
-        const response = await api.get(`/client/${client.email}/jobs`);
+        const response = await api.get(`/client/${client.id}/jobs`);
         setJobs(response.data);
       };
 
       fetchJobs();
 
-      // Setup WebSocket connection
-      // const socket = new WebSocket(wsUrl);
-      // socket.onopen = () => {
-      //   console.log('WebSocket connection established');
-      // };
-      // setWs(socket);
-
-      // socket.onmessage = (event) => {
-      //   const updatedJob = JSON.parse(event.data);
-      //   setJobs(prevJobs =>
-      //     prevJobs.map(job => job.id === updatedJob.id ? updatedJob : job)
-      //   );
-      // };
-
-      // return () => {
-      //   socket.close();
-      // };
       const connectWebSocket = () => {
         const socket = new WebSocket(wsUrl);
 
@@ -96,8 +80,8 @@ const App = () => {
   const createJob = async () => {
     setButtonLoading(true);
     try {
-      await api.post(`/client/${client.email}/jobs`);
-      const response = await api.get(`/client/${client.email}/jobs`);
+      await api.post(`/client/${client.id}/jobs`);
+      const response = await api.get(`/client/${client.id}/jobs`);
       setJobs(response.data);
     } catch (error) {
       console.error('Error creating job:', error);
@@ -138,7 +122,7 @@ const App = () => {
           {buttonLoading ? <CircularProgress size={24} color="inherit" /> : 'Create Job'}
         </Button>
         <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-          <JobList jobs={jobs} />
+          <JobList jobs={jobs} client={client} />
         </Box>
       </Container>
     </Box>
