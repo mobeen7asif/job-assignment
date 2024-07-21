@@ -16,7 +16,6 @@ const App = () => {
 
   // Effect to check if client exists
   useEffect(() => {
-    console.log('here');
     const checkClient = async () => {
       try {
         const response = await api.get(`/client`);
